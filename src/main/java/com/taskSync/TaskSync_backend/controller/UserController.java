@@ -20,8 +20,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUser(){
-       return this.userService.getUser();
+    public List<User> getAllUser(){
+       return this.userService.getAllUser();
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)

@@ -16,8 +16,12 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> getUser(){
+    public List<User> getAllUser(){
         return this.userRepository.findAll();
+    }
+    public User getUser(User user){
+        User findUser = this.userRepository.findByUsername(user.getUsername());
+        return findUser;
     }
 
     public void createUser(User user) {
@@ -46,4 +50,5 @@ public class UserService {
         Optional<User> optionalUser = this.userRepository.findById(id);
         return optionalUser.orElse(null);
     }
+
 }
