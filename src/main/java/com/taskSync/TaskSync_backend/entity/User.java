@@ -10,6 +10,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(unique = true)
     private String username;
     @Column(name = "dateOfBirth")
     private LocalDate dateOfBirth;

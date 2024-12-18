@@ -2,6 +2,7 @@ package com.taskSync.TaskSync_backend.service;
 
 import com.taskSync.TaskSync_backend.entity.User;
 import com.taskSync.TaskSync_backend.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+    private BCryptPasswordEncoder passwordEncoder;
     private UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
@@ -25,6 +27,8 @@ public class UserService {
     }
 
     public void createUser(User user) {
+        String passwordCrypt = this.passwordEncoder.encode(user.getPassword());
+        user.setPassword(passwordCrypt);
         this.userRepository.save(user);
     }
 
@@ -34,7 +38,7 @@ public class UserService {
             User modifyUser = optionalUser.get();
             modifyUser.setUsername(user.getUsername());
             modifyUser.setDateOfBirth(user.getDateOfBirth());
-            modifyUser.setPassword(user.getPassword());
+            modifyUser.setPassword(this.passwordEncoder.encode(user.getPassword()));
             this.userRepository.save(modifyUser);
         }
         else {
