@@ -14,8 +14,9 @@ public class UserService {
     private BCryptPasswordEncoder passwordEncoder;
     private UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<User> getAllUser(){
