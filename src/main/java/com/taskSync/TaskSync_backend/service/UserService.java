@@ -2,6 +2,9 @@ package com.taskSync.TaskSync_backend.service;
 
 import com.taskSync.TaskSync_backend.entity.User;
 import com.taskSync.TaskSync_backend.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     private BCryptPasswordEncoder passwordEncoder;
     private UserRepository userRepository;
 
@@ -19,12 +22,13 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+
+
     public List<User> getAllUser(){
         return this.userRepository.findAll();
     }
     public User getUser(User user){
-        User findUser = this.userRepository.findByUsername(user.getUsername());
-        return findUser;
+        return this.userRepository.findByUsername(user.getUsername());
     }
 
     public void createUser(User user) {
@@ -56,4 +60,12 @@ public class UserService {
         return optionalUser.orElse(null);
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user =  this.userRepository.findByUsername(username);
+        if(user == null){
+            throw new UsernameNotFoundException("Aucun utilisateur trouvé");
+        }
+        else return user;
+    }
 }
