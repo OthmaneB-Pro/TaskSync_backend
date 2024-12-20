@@ -19,15 +19,25 @@ public class User implements UserDetails {
     @Column(name = "dateOfBirth")
     private LocalDate dateOfBirth;
     private String password;
+    private String role;
 
     public User() {
     }
 
-    public User(int id, String username, LocalDate dateOfBirth, String password) {
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public User(int id, String username, LocalDate dateOfBirth, String password, String role) {
         this.id = id;
         this.username = username;
         this.dateOfBirth = dateOfBirth;
         this.password = password;
+        this.role = role;
     }
 
     public int getId() {

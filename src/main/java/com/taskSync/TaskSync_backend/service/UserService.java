@@ -2,13 +2,15 @@ package com.taskSync.TaskSync_backend.service;
 
 import com.taskSync.TaskSync_backend.entity.User;
 import com.taskSync.TaskSync_backend.repository.UserRepository;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,12 +19,10 @@ public class UserService implements UserDetailsService {
     private BCryptPasswordEncoder passwordEncoder;
     private UserRepository userRepository;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, @Lazy BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
-
-
 
     public List<User> getAllUser(){
         return this.userRepository.findAll();
@@ -66,6 +66,7 @@ public class UserService implements UserDetailsService {
         if(user == null){
             throw new UsernameNotFoundException("Aucun utilisateur trouvé");
         }
-        else return user;
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority(user.getRole())));
     }
 }

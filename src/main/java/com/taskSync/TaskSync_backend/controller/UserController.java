@@ -4,15 +4,14 @@ import com.taskSync.TaskSync_backend.dto.AuthentificationDto;
 import com.taskSync.TaskSync_backend.entity.User;
 import com.taskSync.TaskSync_backend.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(path = "user")
@@ -20,8 +19,9 @@ public class UserController {
     private UserService userService;
     private AuthenticationManager authentificationManager;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthenticationManager authenticationManager) {
         this.userService = userService;
+        this.authentificationManager = authenticationManager;
     }
 
     @GetMapping
@@ -50,8 +50,17 @@ public class UserController {
     }
 
     @PostMapping(path = "connection")
-    public Map<String, String> connection(@RequestBody AuthentificationDto authentificationDto){
-        authentificationManager.authenticate(new UsernamePasswordAuthenticationToken(authentificationDto.username(), authentificationDto.password()));
-        return null;
+    public ResponseEntity<?> connection(@RequestBody AuthentificationDto authentificationDto) {
+        try {
+            System.out.println("Tentative de connexion avec : " + authentificationDto.username());
+            authentificationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authentificationDto.username(), authentificationDto.password())
+            );
+            return ResponseEntity.ok("Login ok");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Non autorisé : " + ex.getMessage());
+        }
     }
+
 }
