@@ -64,6 +64,8 @@ public class UserController {
                 Map<String, String> tokenResponse = this.jwtService.generate(authentificationDto.username());
                 return ResponseEntity.ok(tokenResponse);
             }
+            //Recuperer le tokenResponse sous forme de String
+
             return ResponseEntity.ok("Login ok");
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Non autorisé : " + ex.getMessage());

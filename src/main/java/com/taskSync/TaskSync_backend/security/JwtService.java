@@ -1,5 +1,8 @@
 package com.taskSync.TaskSync_backend.security;
 
+import com.taskSync.TaskSync_backend.entity.Jwt;
+import com.taskSync.TaskSync_backend.entity.User;
+import com.taskSync.TaskSync_backend.repository.JwtRepository;
 import com.taskSync.TaskSync_backend.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -16,16 +19,22 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
+    public static final String BEARER = "bearer";
     private UserService userService;
+    private JwtRepository jwtRepository;
     private final String ENCRYPTION_KEY = "fdee140d0a07193a356763552ad2a03cd75e2ebe55da60cca6d9c738df3ba993";
 
-    public JwtService(UserService userService) {
+    public JwtService(UserService userService, JwtRepository jwtRepository) {
         this.userService = userService;
+        this.jwtRepository = jwtRepository;
     }
 
     public Map<String, String> generate(String username){
         UserDetails user = this.userService.loadUserByUsername(username);
-        return this.generateJwt(user);
+        Map<String, String> jwtMap = this.generateJwt(user);
+        Jwt jwt = Jwt.builder().value(jwtMap.get(BEARER)).disable(false).expire(false).user((User) user).build();
+        this.jwtRepository.save(jwt);
+        return jwtMap;
     }
 
     private Map<String, String> generateJwt(UserDetails user) {
