@@ -39,15 +39,6 @@ public class UserController {
     public void createUser(@RequestBody User user){
         this.userService.createUser(user);
     }
-    @PutMapping(path = "{id}", consumes = APPLICATION_JSON_VALUE)
-    public void modifyUser(@PathVariable int id, @RequestBody User user){
-        this.userService.modifyUser(id, user);
-    }
-
-    @DeleteMapping(path = "{id}")
-    public void deleteUser(@PathVariable int id){
-        this.userService.deleteUser(id);
-    }
 
     @GetMapping(path = "{id}", produces = APPLICATION_JSON_VALUE)
     public User searchUser(@PathVariable int id){
@@ -64,6 +55,8 @@ public class UserController {
                 Map<String, String> tokenResponse = this.jwtService.generate(authentificationDto.username());
                 return ResponseEntity.ok(tokenResponse);
             }
+            //Recuperer le tokenResponse sous forme de String
+
             return ResponseEntity.ok("Login ok");
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Non autorisé : " + ex.getMessage());
