@@ -39,15 +39,6 @@ public class UserController {
     public void createUser(@RequestBody User user){
         this.userService.createUser(user);
     }
-    @PutMapping(path = "{id}", consumes = APPLICATION_JSON_VALUE)
-    public void modifyUser(@PathVariable int id, @RequestBody User user){
-        this.userService.modifyUser(id, user);
-    }
-
-    @DeleteMapping(path = "{id}")
-    public void deleteUser(@PathVariable int id){
-        this.userService.deleteUser(id);
-    }
 
     @GetMapping(path = "{id}", produces = APPLICATION_JSON_VALUE)
     public User searchUser(@PathVariable int id){
