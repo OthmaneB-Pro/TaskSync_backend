@@ -42,7 +42,7 @@ public class UserController {
 
     @GetMapping(path = "{id}", produces = APPLICATION_JSON_VALUE)
     public User searchUser(@PathVariable int id){
-        return this.userService.searchUser(id);
+        return userService.searchUser(id);
     }
 
     @PostMapping(path = "connection")
